@@ -49,12 +49,6 @@ var shader, buffer, geometry;
 
 const shell = glNow({clearColor:[0,0,0,1]});
 
-const camera = perspectiveCamera({
-    fov: Math.PI / 4,
-    near: 0.2,
-    far: 10000
-});
-
 const lightDirection = vec3.create();
 lightDirection[0] = 1.0;
 lightDirection[1] = 0.0;
@@ -70,7 +64,7 @@ var Planet = function(gl) {
     this.scale = vec3.create();
     this.model = mat4.create();
 
-    this.scale[0] = this.scale[1] = this.scale[2] = 1.0;
+    this.scale[0] = this.scale[1] = this.scale[2] = 4.0;
 
     this.shader = glShader(gl, VertTestShader, FragTestShader);
 
@@ -100,15 +94,21 @@ Planet.prototype.draw = function(gl, camera, lightDirection) {
     this.geometry.draw(gl.TRIANGLES);
 };
 
+const camera = perspectiveCamera({
+    fov: Math.PI / 4,
+    near: 1,
+    far: 100000000
+});
 
 var Orbiter = function(gl, target, altitude) {
     this.orbitTarget = target;
     this.orbitRadius = target.radius + altitude;
 };
 Orbiter.prototype.controlCamera = function(camera) {
+    var rad = 10;
     camera.identity();
-    camera.translate([ 0, 0, 5 ]);
-    camera.lookAt([ 0, 0, 0 ]);
+    camera.translate([ rad, 0, 0 ]);
+    camera.lookAt([ 0, 0, rad ]);
     camera.viewport = [ 0, 0, shell.canvas.width, shell.canvas.height ];
     camera.update();
 };
